@@ -1,0 +1,35 @@
+[
+  {
+    "antipattern": "tiny-text",
+    "name": "Tiny body text",
+    "description": "Body text below 12px is hard to read, especially on high-DPI screens. Use at least 14px for body content, 16px is ideal.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "http://localhost:3000",
+    "line": 0,
+    "snippet": "11px body text",
+    "selector": "span.text-\\[11px\\].px-2"
+  },
+  {
+    "antipattern": "skipped-heading",
+    "name": "Skipped heading level",
+    "description": "Heading levels should not skip (e.g. h1 then h3 with no h2). Screen readers use heading hierarchy for navigation. Skipping levels breaks the document outline.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "http://localhost:3000",
+    "line": 0,
+    "snippet": "<h1> \"Visão Geral\" followed by <h3> \"Fluxo de Caixa\" (missing h2)",
+    "selector": "body"
+  },
+  {
+    "antipattern": "pulsing-dot",
+    "name": "Pulsing status dot",
+    "description": "Small pulsing status dots simulate liveness decoratively. Reserve pulse animation for indicators tied to genuinely live, changing data; a static indicator with clear labeling is honest and calmer.",
+    "severity": "error",
+    "category": "slop",
+    "file": "http://localhost:3000",
+    "line": 0,
+    "snippet": "animate-pulse on tiny rounded-full element in header/nav",
+    "selector": "body"
+  }
+]

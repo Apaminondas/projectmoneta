@@ -1,0 +1,20 @@
+# Contexto exclusivo para build da moneta-api
+.git/
+.github/
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+.agents/
+.scratch/
+target/
+moneta-dashboard/
+docs/
+db/
+playwright/
+*.log
+*.md
+Dockerfile*
+docker-compose*.yml
+render.yaml

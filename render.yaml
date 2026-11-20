@@ -1,0 +1,35 @@
+# Blueprint de infraestrutura para Render (Back-end Docker)
+# Configure manualmente DB_URL (formato jdbc:postgresql://...), DB_USERNAME, DB_PASSWORD
+# e CORS_ALLOWED_ORIGINS (URL pública do front-end no Vercel) no painel do Render.
+services:
+  - type: web
+    name: moneta-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JAVA_TOOL_OPTIONS
+        value: "-Xmx320m -Xms128m"
+      - key: REGISTRATION_ENABLED
+        value: "false"
+      - key: DEMO_API_READ_ONLY
+        value: "true"
+      - key: DEMO_USER_EMAIL
+        value: empresa.demo@example.test
+      - key: JWT_EXPIRATION_MS
+        value: "3600000"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: BFF_SHARED_SECRET
+        generateValue: true
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false

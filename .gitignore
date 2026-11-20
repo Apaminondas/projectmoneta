@@ -1,0 +1,44 @@
+# Build
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# SO
+.DS_Store
+Thumbs.db
+
+# Segredos / ambiente local (NUNCA versionar)
+.env*
+!.env.example
+
+# Ferramentas de agentes e rascunhos locais
+.agents/
+.scratch/
+.impeccable/
+moneta-dashboard/.impeccable/
+*.skill
+
+# Playwright auth & artefatos efêmeros
+playwright/.auth/
+moneta-dashboard/playwright/.auth/
+playwright-report/
+test-results/
+moneta-dashboard/test-results/
+moneta-dashboard/playwright-report/
+
+# Logs
+*.log
+
+# Node & Next.js
+node_modules/
+.next/
+out/
+.pnpm-store/
+*.tsbuildinfo

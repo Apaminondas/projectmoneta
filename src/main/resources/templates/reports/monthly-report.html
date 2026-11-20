@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Relatório Financeiro</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 14mm 14mm 18mm 14mm;
+            @bottom-left {
+                content: "Moneta • Documento Confidencial";
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+                font-size: 8pt;
+                color: #94a3b8;
+            }
+            @bottom-right {
+                content: "Página " counter(page) " de " counter(pages);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+                font-size: 8pt;
+                color: #94a3b8;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            color: #1e293b;
+            background-color: #ffffff;
+            font-size: 9.5pt;
+            line-height: 1.4;
+        }
+
+        .header-table {
+            width: 100%;
+            border-bottom: 2px solid #0284c7;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+        }
+
+        .header-logo {
+            font-size: 18pt;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+
+        .header-logo span {
+            color: #0284c7;
+        }
+
+        .header-subtitle {
+            font-size: 9pt;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .header-meta {
+            text-align: right;
+            font-size: 8.5pt;
+            color: #475569;
+        }
+
+        .meta-pill {
+            display: inline-block;
+            background-color: #f1f5f9;
+            color: #0369a1;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 8pt;
+            margin-bottom: 4px;
+        }
+
+        .client-info-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 18px;
+            width: 100%;
+        }
+
+        .client-info-table {
+            width: 100%;
+        }
+
+        .client-info-label {
+            font-size: 7.5pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .client-info-value {
+            font-size: 9.5pt;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .section-title {
+            font-size: 11pt;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 10px;
+            padding-left: 6px;
+            border-left: 3px solid #0284c7;
+        }
+
+        .cards-table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: separate;
+            border-spacing: 8px 0;
+        }
+
+        .card-cell {
+            width: 33.33%;
+            border-radius: 6px;
+            padding: 12px 14px;
+            vertical-align: top;
+        }
+
+        .card-income {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .card-expense {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .card-balance {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+        }
+
+        .card-label {
+            font-size: 8pt;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .card-value {
+            font-size: 13.5pt;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .card-value-income { color: #15803d; }
+        .card-value-expense { color: #b91c1c; }
+        .card-value-balance { color: #0369a1; }
+        .card-value-negative { color: #b91c1c; }
+
+        .card-subtext {
+            font-size: 7.5pt;
+            color: #64748b;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 22px;
+        }
+
+        .data-table th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 700;
+            font-size: 8pt;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 8px 10px;
+            text-align: left;
+            border-top: 1px solid #cbd5e1;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .data-table td {
+            padding: 8px 10px;
+            font-size: 8.5pt;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        .data-table tr:nth-child(even) td {
+            background-color: #fafafa;
+        }
+
+        .badge-type {
+            display: inline-block;
+            font-size: 7.5pt;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .badge-income {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-expense {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .amount-income {
+            color: #15803d;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .amount-expense {
+            color: #b91c1c;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .progress-bar-bg {
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            height: 8px;
+            width: 100px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+
+        .progress-bar-fill {
+            background-color: #ef4444;
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .total-row td {
+            background-color: #f8fafc !important;
+            font-weight: 800 !important;
+            border-top: 2px solid #cbd5e1;
+            border-bottom: 2px solid #cbd5e1;
+            color: #0f172a;
+        }
+
+        .empty-state {
+            padding: 20px;
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
+            font-size: 9pt;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABEÇALHO -->
+    <table class="header-table">
+        <tr>
+            <td style="vertical-align: top;">
+                <div th:if="${report.logoBase64 != null}" style="margin-bottom: 6px;">
+                    <img th:src="${report.logoBase64}" style="max-height: 48px; max-width: 200px; object-fit: contain;" alt="Logo" />
+                </div>
+                <div class="header-logo" th:if="${report.logoBase64 == null and report.companyName != null and !#strings.isEmpty(report.companyName)}" th:text="${report.companyName}">
+                    Empresa
+                </div>
+                <div class="header-logo" th:if="${report.logoBase64 == null and (report.companyName == null or #strings.isEmpty(report.companyName))}">
+                    Moneta
+                </div>
+                <div class="header-subtitle" th:if="${report.companyName != null and !#strings.isEmpty(report.companyName)}" th:text="${report.companyName} + ' • ' + (${report.companyEmail != null ? report.companyEmail : 'Relatório Executivo'})">
+                    Empresa • Gestão Financeira
+                </div>
+                <div class="header-subtitle" th:if="${report.companyName == null or #strings.isEmpty(report.companyName)}">
+                    Gestão Financeira Inteligente • Relatório Mensal Analítico
+                </div>
+            </td>
+            <td class="header-meta" style="vertical-align: top;">
+                <span class="meta-pill" th:text="${report.reportCode}">REP-202610-001</span><br/>
+                <strong>Período:</strong> <span th:text="${report.formattedPeriod}">Outubro de 2026</span><br/>
+                <strong>Emissão:</strong> <span th:text="${report.formattedGeneratedAt}">09/10/2026 17:30</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- IDENTIFICAÇÃO DO CLIENTE -->
+    <div class="client-info-box">
+        <table class="client-info-table">
+            <tr>
+                <td style="width: 50%;">
+                    <div class="client-info-label">Cliente / Titular</div>
+                    <div class="client-info-value" th:text="${report.userName}">Nome do Usuário</div>
+                </td>
+                <td style="width: 50%;">
+                    <div class="client-info-label">E-mail Cadastrado</div>
+                    <div class="client-info-value" th:text="${report.userEmail}">usuario@email.com</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- RESUMO EXECUTIVO (CARDS) -->
+    <div class="section-title">Resumo Executivo do Período</div>
+    <table class="cards-table">
+        <tr>
+            <td class="card-cell card-income">
+                <div class="card-label">Total Entradas (Receitas)</div>
+                <div class="card-value card-value-income" th:text="${report.formattedTotalIncome}">R$ 0,00</div>
+                <div class="card-subtext">Créditos recebidos no mês</div>
+            </td>
+            <td class="card-cell card-expense">
+                <div class="card-label">Total Saídas (Despesas)</div>
+                <div class="card-value card-value-expense" th:text="${report.formattedTotalExpense}">R$ 0,00</div>
+                <div class="card-subtext">Débitos realizados no mês</div>
+            </td>
+            <td class="card-cell card-balance">
+                <div class="card-label">Saldo Líquido</div>
+                <div class="card-value" 
+                     th:classappend="${report.positiveBalance} ? 'card-value-balance' : 'card-value-negative'"
+                     th:text="${report.formattedBalance}">R$ 0,00</div>
+                <div class="card-subtext" th:text="'Taxa de Poupança: ' + ${report.savingsRate}">Taxa: 0%</div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- DISTRIBUIÇÃO POR CATEGORIAS (DESPESAS) -->
+    <div class="section-title">Distribuição de Despesas por Categoria</div>
+    <div th:if="${#lists.isEmpty(report.categories)}" class="empty-state">
+        Nenhuma despesa registrada para o período selecionado.
+    </div>
+    <table th:if="${!#lists.isEmpty(report.categories)}" class="data-table">
+        <thead>
+            <tr>
+                <th style="width: 45%;">Categoria</th>
+                <th style="width: 25%; text-align: right;">Total Gasto</th>
+                <th style="width: 30%; text-align: right;">Participação (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="cat : ${report.categories}">
+                <td style="font-weight: 600;" th:text="${cat.name}">Alimentação</td>
+                <td class="text-right" th:text="${cat.formattedTotalExpense}">R$ 0,00</td>
+                <td class="text-right">
+                    <span th:text="${cat.formattedPercentage}">0%</span>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" th:style="'width: ' + ${cat.percentage} + '%;'"></div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- EXTRATO ANALÍTICO COMPLETO -->
+    <div class="section-title">Extrato Analítico de Transações (<span th:text="${report.transactionCount}">0</span> registros)</div>
+    <div th:if="${#lists.isEmpty(report.transactions)}" class="empty-state">
+        Nenhum lançamento registrado no período.
+    </div>
+    <table th:if="${!#lists.isEmpty(report.transactions)}" class="data-table">
+        <thead>
+            <tr>
+                <th style="width: 14%;">Data</th>
+                <th style="width: 38%;">Descrição</th>
+                <th style="width: 20%;">Categoria</th>
+                <th style="width: 13%;">Tipo</th>
+                <th style="width: 15%; text-align: right;">Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="t : ${report.transactions}">
+                <td th:text="${t.formattedDate}">01/10/2026</td>
+                <td style="font-weight: 500;" th:text="${t.description}">Descrição</td>
+                <td style="color: #475569;" th:text="${t.categoryName}">Categoria</td>
+                <td>
+                    <span class="badge-type" 
+                          th:classappend="${t.isIncome} ? 'badge-income' : 'badge-expense'"
+                          th:text="${t.typeLabel}">Receita</span>
+                </td>
+                <td th:class="${t.isIncome} ? 'amount-income' : 'amount-expense'"
+                    th:text="${t.formattedAmount}">+ R$ 0,00</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="4">RESULTADO CONSOLIDADO DO PERÍODO</td>
+                <td class="text-right" 
+                    th:classappend="${report.positiveBalance} ? 'amount-income' : 'amount-expense'"
+                    th:text="${report.formattedBalance}">R$ 0,00</td>
+            </tr>
+        </tfoot>
+    </table>
+
+</body>
+</html>

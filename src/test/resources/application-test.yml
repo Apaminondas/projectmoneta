@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/finance_test
+    username: finance
+    password: test
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+app:
+  jwt:
+    secret: "uma-chave-secreta-muito-longa-e-segura-para-testes-1234567890"
+    expiration-ms: 3600000

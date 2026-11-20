@@ -1,0 +1,19 @@
+app:
+  security:
+    bff-secret-required: true
+    registration-enabled: ${REGISTRATION_ENABLED:false}
+  demo:
+    read-only: ${DEMO_API_READ_ONLY:true}
+    email: ${DEMO_USER_EMAIL:empresa.demo@example.test}
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+management:
+  endpoint:
+    health:
+      show-details: never
+

@@ -1,0 +1,18 @@
+{
+  "name": "Moneta",
+  "short_name": "Moneta",
+  "description": "Gestão financeira corporativa fullstack com API REST Spring Boot 3 e BFF zero-token em Next.js 16.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#f97316",
+  "icons": [
+    {
+      "src": "/moneta-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
